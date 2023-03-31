@@ -54,11 +54,11 @@ class Problem extends React.Component {
             });
             console.error('Post http status =' + res.status);
           }})
-      .catch(err => {
+     // .catch(err => {
        // toast.error("Error new assignment failed.", {
         //     position: toast.POSITION.BOTTOM_LEFT});
-          console.error(err);
-      }) 
+       //   console.error(err);
+    //  }) 
 }
 
 
