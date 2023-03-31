@@ -10,9 +10,11 @@ import 'react-toastify/dist/ReactToastify.css';
 class Problem extends React.Component {
   constructor(props) {
     super(props);
-    this.state={names: "test", date:"2023-01-01", alias:'', message:'', course_id:'123456',attempt:null, 
-                correct: false,  answer:null, isItGood:0};
+    this.state={names: "test", date:"2023-01-01", alias:'', course_id:'123456',attempt:null, 
+                correct: false,  answer:null,  message:"start"};
   }
+
+  //isItGood:,
   
   componentDidMount() {
     this.render();
@@ -37,11 +39,26 @@ class Problem extends React.Component {
       {  
         method: 'POST',
         headers: { 'X-XSRF-TOKEN': token }
-      })
-//      .then((response ) => {
-//      toast.success(" response")}
-//    );   
-
+      } )
+      .then(res => {
+          if (res.ok) {
+            this.setState({ message: "working"});
+            toast.success("Assignment successfully added", {
+                position: toast.POSITION.BOTTOM_LEFT
+            });
+            this.fetchAssignments();
+          } else {
+            this.setState({ message: "not working"});
+            toast.error("Error new assignment failed.", {
+                position: toast.POSITION.BOTTOM_LEFT
+            });
+            console.error('Post http status =' + res.status);
+          }})
+      .catch(err => {
+       // toast.error("Error new assignment failed.", {
+        //     position: toast.POSITION.BOTTOM_LEFT});
+          console.error(err);
+      }) 
 }
 
 
@@ -66,19 +83,22 @@ class Problem extends React.Component {
 
         <TextField autoFocus style = {{width:200}} 
              label="Name of Assignment" name="names" 
-             onChange={this.handleChange}  value={names} /> 
+             onChange={this.handleChange}  /> 
+             
         <br/> <br/>
         <TextField style = {{width:200}} label="Date - yyyy-mm-dd" name="date" 
-             onChange={this.handleChange}  value={date} /> 
+             onChange={this.handleChange}   /> 
         <br/> <br/>
         <TextField style = {{width:200}} label="Course ID" name="course_id" 
-             onChange={this.handleChange}  value={course_id} /> 
+             onChange={this.handleChange}  /> 
         <br/> <br/>
-        <Button variant="outlined" color="primary" style={{margin: 10}}
+        <Button id="submit" variant="outlined" color="primary" style={{margin: 10}}
              onClick={this.handleSubmit} >Submit</Button>
-        <h3>Thanks</h3>
+        <h3 id="message">{this.state.message}</h3>
+        <ToastContainer autoClose={1500} /> 
       </div>
       ); 
   }
 }
 export default Problem; 
+
